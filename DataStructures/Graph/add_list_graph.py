@@ -18,6 +18,7 @@ def update_vertex_info(my_graph, key_u, new_info_u): #Buscar llave, cambiar info
         return None
     else: 
         my_graph["vertices"]=mp.put(my_graph["vertices"],key_u, new_info_u)
+        return my_graph
 
 def remove_vertex(grafo, key): #Busca la llave y la elimina de la tabla
     pass
