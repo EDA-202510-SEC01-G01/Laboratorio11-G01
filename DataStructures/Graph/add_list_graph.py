@@ -1,42 +1,24 @@
 #Importar estructuras necesarias, Se hizo un resumen pero hay detalles no documentados previos a la implementacion.
+from DataStructures.Map import map_linear_probing as mp
 
 
+def new_graph(order): # Crea un nuevo grafo; Salida: {vertices: Tabla Hash, num_edges: int}
+    rst={
+        "vertices": mp.new_map(order, 0.5), 
+        "num_edges": 0
+        }
+    return rst
+    
+def insert_vertex(my_graph, key_u, info_u): #Usar funcion new_vertex de vertex.py y añadirlo a la tabla de hash "vertices"; Salida: Grafo dirigido
+    my_graph["vertices"]=mp.put(my_graph["vertices"], key_u, info_u)
+    return my_graph
 
-def new_graph(): # Crea un nuevo grafo; Salida: {vertices: Tabla Hash, num_edges: int}
-    """{
-    'vertices': {
-        'prime': 109345121,
-        'capacity': 3,
-        'scale': 1,
-        'shift': 0,
-        'table': {
-            'elements': [
-                {
-                    'key': None,
-                    'value': None
-                },
-                {
-                    'key': None,
-                    'value': None
-                },
-                {
-                    'key': None,
-                    'value': None
-                }
-            ],
-            'size': 3
-        },
-        'current_factor': 0,
-        'limit_factor': 0.5,
-        'size': 0
-    },
-    'num_edges': 0
-}"""
-    pass
-def insert_vertex(grafo, key, info): #Usar funcion new_vertex de vertex.py y añadirlo a la tabla de hash "vertices"; Salida: Grafo dirigido
-    pass
-def update_vertex_info(grafo, key, nueva_info): #Buscar llave, cambiar infor; Salida: Grafo dirigido
-    pass
+def update_vertex_info(my_graph, key_u, new_info_u): #Buscar llave, cambiar infor; Salida: Grafo dirigido
+    if mp.contains(my_graph["vertices"], key_u) == True:
+        return None
+    else: 
+        my_graph["vertices"]=mp.put(my_graph["vertices"],key_u, new_info_u)
+
 def remove_vertex(grafo, key): #Busca la llave y la elimina de la tabla
     pass
 def add_edge(grafo, vertice1, vertice2, weight = 1.0):  #Genera un arco entre v1 y v2, si alguno de los vertices no existe se retorna una excepcion, si el arco existe se modifica su peso, 
