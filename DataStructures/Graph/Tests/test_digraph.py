@@ -1,6 +1,6 @@
 import pytest
 from DataStructures.Utils.utils import handle_not_implemented
-from DataStructures.Graph import digraph as G
+from DataStructures.Graph import add_list_graph as G
 from DataStructures.Map import map_linear_probing as mp
 from DataStructures.List import array_list as lt
 from DataStructures.Graph import edge as E
