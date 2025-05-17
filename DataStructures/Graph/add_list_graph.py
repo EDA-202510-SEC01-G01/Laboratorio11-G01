@@ -10,7 +10,8 @@ def new_graph(order): # Crea un nuevo grafo; Salida: {vertices: Tabla Hash, num_
     return rst
     
 def insert_vertex(my_graph, key_u, info_u): #Usar funcion new_vertex de vertex.py y añadirlo a la tabla de hash "vertices"; Salida: Grafo dirigido
-    my_graph["vertices"]=mp.put(my_graph["vertices"], key_u, info_u)
+    value={"key": key_u, "value":info_u, "adjacents":mp.new_map(1, 0.5)}
+    my_graph["vertices"]=mp.put(my_graph["vertices"], key_u, value)
     return my_graph
 
 def update_vertex_info(my_graph, key_u, new_info_u): #Buscar llave, cambiar infor; Salida: Grafo dirigido
@@ -20,10 +21,21 @@ def update_vertex_info(my_graph, key_u, new_info_u): #Buscar llave, cambiar info
         my_graph["vertices"]=mp.put(my_graph["vertices"],key_u, new_info_u)
         return my_graph
 
-def remove_vertex(grafo, key): #Busca la llave y la elimina de la tabla
-    pass
-def add_edge(grafo, vertice1, vertice2, weight = 1.0):  #Genera un arco entre v1 y v2, si alguno de los vertices no existe se retorna una excepcion, si el arco existe se modifica su peso, 
-    pass
+def remove_vertex(my_graph, key_u): #Busca la llave y la elimina de la tabla
+    my_graph["vertices"]=mp.remove(my_graph["vertices"], key_u)
+    return my_graph
+
+def add_edge(my_graph, key_u, key_v, weight = 1.0):  #Genera un arco entre v1 y v2, si alguno de los vertices no existe se retorna una excepcion, si el arco existe se modifica su peso, 
+    if (mp.contains(my_graph["vertices"], key_u) == True) and (mp.contains(my_graph["vertices"], key_v) == True):
+        new_info=mp.get(my_graph["vertices"], key_u)
+        value={"to": key_v, "weight": weight}
+        mp.put(new_info["adjacents"], key_v, value)
+        mp.put(my_graph["vertices"], key_u, new_info)
+        my_graph["num_edges"]+=1
+        return my_graph
+    else:
+        raise Exception("El vertice u no existe")
+    
 def order(grafo):#numero de vetices del grafo
     pass
 def size(grafo): #numero de arcos del grafo
