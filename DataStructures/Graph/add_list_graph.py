@@ -1,7 +1,6 @@
 #Importar estructuras necesarias, Se hizo un resumen pero hay detalles no documentados previos a la implementacion.
 from DataStructures.Map import map_linear_probing as mp
 
-
 def new_graph(order): # Crea un nuevo grafo; Salida: {vertices: Tabla Hash, num_edges: int}
     rst={
         "vertices": mp.new_map(order, 0.5), 
@@ -36,14 +35,19 @@ def add_edge(my_graph, key_u, key_v, weight = 1.0):  #Genera un arco entre v1 y 
     else:
         raise Exception("El vertice u no existe")
     
-def order(grafo):#numero de vetices del grafo
-    pass
-def size(grafo): #numero de arcos del grafo
-    pass
-def vertices(grafo): #lista de llaves de todos los vertices
-    pass
-def degree(grafo, key): #grado de la llave key(numero de arcos adyacentes)
-    pass
+def order(my_graph):#numero de vetices del grafo
+    return my_graph["vertices"]["size"]
+    
+def size(my_graph): #numero de arcos del grafo
+    return my_graph["num_edges"]
+    
+def vertices(my_graph): #lista de llaves de todos los vertices
+    return mp.key_set(my_graph)
+    
+def degree(my_graph, key_u): #grado de la llave key(numero de arcos adyacentes)
+    new_info=mp.get(my_graph["vertices"], key_u)
+    return mp.size(new_info["adjacents"])
+    
 def get_edge(grafo, vertice1, vertice2): #Arco entre v1 y v2
     pass
 def get_vertex_information(grafo, vertice): #info de v
