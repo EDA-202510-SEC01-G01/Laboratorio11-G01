@@ -8,17 +8,22 @@ from DataStructures.Graph import vertex as V
 
 
 def setup_tests():
-    empty_graph = G.new_graph(0)
+    empty_graph = G.new_graph(1)
     some_graph = G.new_graph(2)
-
+    
+    
     vertex_1 = V.new_vertex(1, {"name": "A"})
     vertex_2 = V.new_vertex(2, {"name": "B"})
+
 
     V.add_adjacent(vertex_1, 2, 3.0)
     V.add_adjacent(vertex_2, 1, 3.0)
 
+
     vertex_1 = mp.put(some_graph["vertices"], 1, vertex_1)
     vertex_2 = mp.put(some_graph["vertices"], 2, vertex_2)
+    
+    
     some_graph["num_edges"] = 2
 
     return empty_graph, some_graph

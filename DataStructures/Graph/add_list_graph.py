@@ -1,5 +1,6 @@
 #Importar estructuras necesarias, Se hizo un resumen pero hay detalles no documentados previos a la implementacion.
 from DataStructures.Map import map_linear_probing as mp
+from DataStructures.Graph import vertex as v
 
 def new_graph(order): # Crea un nuevo grafo; Salida: {vertices: Tabla Hash, num_edges: int}
     rst={
@@ -9,8 +10,8 @@ def new_graph(order): # Crea un nuevo grafo; Salida: {vertices: Tabla Hash, num_
     return rst
     
 def insert_vertex(my_graph, key_u, info_u): #Usar funcion new_vertex de vertex.py y añadirlo a la tabla de hash "vertices"; Salida: Grafo dirigido
-    value={"key": key_u, "value":info_u, "adjacents":mp.new_map(1, 0.5)}
-    my_graph["vertices"]=mp.put(my_graph["vertices"], key_u, value)
+    value = v.new_vertex(key_u, info_u)
+    mp.put(my_graph["vertices"], key_u, value)
     return my_graph
 
 def update_vertex_info(my_graph, key_u, new_info_u): #Buscar llave, cambiar infor; Salida: Grafo dirigido

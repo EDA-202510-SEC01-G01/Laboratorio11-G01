@@ -75,6 +75,6 @@ def hash_value(table, key):
     b = table['shift']
     p = table['prime']
     m = table['capacity']
-
     value = int((abs(a*h + b) % p) % m)
+    
     return value
