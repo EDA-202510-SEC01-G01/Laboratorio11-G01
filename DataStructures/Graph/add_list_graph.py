@@ -43,7 +43,7 @@ def size(my_graph): #numero de arcos del grafo
     return my_graph["num_edges"]
     
 def vertices(my_graph): #lista de llaves de todos los vertices
-    return mp.key_set(my_graph)
+    return mp.key_set(my_graph['vertices'])
     
 def degree(my_graph, key_u): #grado de la llave key(numero de arcos adyacentes)
     new_info=mp.get(my_graph["vertices"], key_u)
