@@ -19,7 +19,6 @@ def update_vertex_info(my_graph, key_u, new_info_u):
     if contains_vertex(my_graph, key_u):
         vertex = mp.get(my_graph["vertices"], key_u)
         vertex["value"] = new_info_u
-        mp.put(my_graph["vertices"], key_u, vertex)
         return my_graph
     else:
         return None
