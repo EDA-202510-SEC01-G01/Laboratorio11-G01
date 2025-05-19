@@ -1,64 +1,105 @@
 #Importar estructuras necesarias, Se hizo un resumen pero hay detalles no documentados previos a la implementacion.
 from DataStructures.Map import map_linear_probing as mp
 from DataStructures.Graph import vertex as v
+from DataStructures.Graph import edge as e
 
-def new_graph(order): # Crea un nuevo grafo; Salida: {vertices: Tabla Hash, num_edges: int}
+def new_graph(order): 
     rst={
         "vertices": mp.new_map(order, 0.5), 
         "num_edges": 0
         }
     return rst
     
-def insert_vertex(my_graph, key_u, info_u): #Usar funcion new_vertex de vertex.py y añadirlo a la tabla de hash "vertices"; Salida: Grafo dirigido
+def insert_vertex(my_graph, key_u, info_u): 
     value = v.new_vertex(key_u, info_u)
     mp.put(my_graph["vertices"], key_u, value)
     return my_graph
 
-def update_vertex_info(my_graph, key_u, new_info_u): #Buscar llave, cambiar infor; Salida: Grafo dirigido
-    if mp.contains(my_graph["vertices"], key_u) == True:
-        return None
-    else: 
-        my_graph["vertices"]=mp.put(my_graph["vertices"],key_u, new_info_u)
-        return my_graph
-
-def remove_vertex(my_graph, key_u): #Busca la llave y la elimina de la tabla
-    my_graph["vertices"]=mp.remove(my_graph["vertices"], key_u)
-    return my_graph
-
-def add_edge(my_graph, key_u, key_v, weight = 1.0):  #Genera un arco entre v1 y v2, si alguno de los vertices no existe se retorna una excepcion, si el arco existe se modifica su peso, 
-    if (mp.contains(my_graph["vertices"], key_u) == True) and (mp.contains(my_graph["vertices"], key_v) == True):
-        new_info=mp.get(my_graph["vertices"], key_u)
-        value={"to": key_v, "weight": weight}
-        mp.put(new_info["adjacents"], key_v, value)
-        mp.put(my_graph["vertices"], key_u, new_info)
-        my_graph["num_edges"]+=1
+def update_vertex_info(my_graph, key_u, new_info_u):
+    if contains_vertex(my_graph, key_u):
+        vertex = mp.get(my_graph["vertices"], key_u)
+        vertex["value"] = new_info_u
+        mp.put(my_graph["vertices"], key_u, vertex)
         return my_graph
     else:
-        raise Exception("El vertice u no existe")
+        return None
+
+def remove_vertex(my_graph, key_u):  
+    if contains_vertex(my_graph, key_u):
+        keys = mp.key_set(my_graph['vertices'])
+        for k in keys:
+            vertex = mp.get(my_graph['vertices'], k)
+            if mp.contains(vertex['adjacents'], key_u):
+                mp.remove(vertex['adjacents'], key_u)
+                my_graph['num_edges'] -= 1
+        vertex_removed = mp.get(my_graph["vertices"], key_u)
+        my_graph['num_edges'] -= mp.size(vertex_removed['adjacents'])
+        my_graph["vertices"] = mp.remove(my_graph["vertices"], key_u)
+    return my_graph
+
+def add_edge(my_graph, key_u, key_v, weight = 1.0):  
+    if contains_vertex(my_graph, key_u) and contains_vertex(my_graph, key_v):
+        vertex_u = mp.get(my_graph["vertices"], key_u)
+        if mp.contains(vertex_u["adjacents"], key_v):
+            edge = mp.get(vertex_u["adjacents"], key_v)
+            edge["weight"] = weight
+            mp.put(vertex_u["adjacents"], key_v, edge)
+        else:
+            new_edge = e.new_edge(key_v, weight)
+            mp.put(vertex_u["adjacents"], key_v, new_edge)
+            my_graph["num_edges"] += 1
+        mp.put(my_graph["vertices"], key_u, vertex_u)
+        return my_graph
+    else:
+        raise Exception("Uno o ambos vértices no existen")
     
-def order(my_graph):#numero de vetices del grafo
+def order(my_graph):
     return my_graph["vertices"]["size"]
     
-def size(my_graph): #numero de arcos del grafo
+def size(my_graph): 
     return my_graph["num_edges"]
     
-def vertices(my_graph): #lista de llaves de todos los vertices
+def vertices(my_graph): 
     return mp.key_set(my_graph['vertices'])
     
-def degree(my_graph, key_u): #grado de la llave key(numero de arcos adyacentes)
+def degree(my_graph, key_u):
     new_info=mp.get(my_graph["vertices"], key_u)
     return mp.size(new_info["adjacents"])
     
-def get_edge(grafo, vertice1, vertice2): #Arco entre v1 y v2
-    pass
-def get_vertex_information(grafo, vertice): #info de v
-    pass
-def contains_vertex(grafo, vertice): #Determina si el vertice existe en el grafo
-    pass
-def adjacents(grafo, vertice): #lista de adyacentes de v
-    pass
-def edges_vertex(grafo, vertice): #lista de arcos asociados
-    pass
-def get_vertex(grafo, vertice): #retorna el valor del vertice
-    pass
+def get_edge(my_graph, key_u, key_v): 
+    v1 = mp.get(my_graph['vertices'], key_u)
+    if v1 is not None:
+        v2 = mp.get(v1['adjacents'], key_v)
+        if v2  is not None:
+            return v2
+    raise Exception ('El arco no existe entre ambos vertices')
+def get_vertex_information(my_graph, key_u): #retorna key_u
+    v1 = mp.get(my_graph['vertices'], key_u)
+    if v1:
+        return v1
+    raise Exception("El vertice no existe")
+def contains_vertex(my_graph, key_u): 
+    v1 = mp.get(my_graph['vertices'], key_u)
+    if v1:
+        return True
+    else:
+        return False
+def adjacents(my_graph, key_u):
+    v1 = mp.get(my_graph['vertices'], key_u)
+    if v1:
+        return mp.key_set(v1['adjacents'])
+    else: 
+        raise Exception ('El vertice no existe')
+def edges_vertex(my_graph, key_u): 
+    v1 = mp.get(my_graph['vertices'], key_u)
+    if v1:
+        return mp.value_set(v1['adjacents'])
+    else: 
+        raise Exception ('El vertice no existe')
+def get_vertex(my_graph, key_u): #retorna el valor(value) de key_u
+    v1 = mp.get(my_graph['vertices'], key_u)
+    if v1:
+        return v1['value']
+    else:
+        raise Exception ('El vertice no existe')
 
