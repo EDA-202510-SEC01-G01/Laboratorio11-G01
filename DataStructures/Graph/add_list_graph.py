@@ -2,6 +2,10 @@
 from DataStructures.Map import map_linear_probing as mp
 from DataStructures.Graph import vertex as v
 from DataStructures.Graph import edge as e
+from DataStructures.Graph import dfo_structure as dfo_s
+from DataStructures.List import array_list as ar
+from DataStructures.Queue import queue
+from DataStructures.Stack import stack
 
 def new_graph(order): 
     rst={
@@ -102,3 +106,30 @@ def get_vertex(my_graph, key_u): #retorna el valor(value) de key_u
     else:
         raise Exception ('El vertice no existe')
 
+def dfs(my_graph, source):
+    search = {'source': source, 'visited': None}
+    search['visited'] = mp.new_map(order(my_graph), 0.5)
+    mp.put(search['visited'], source, {'marked': True, 'edge_from': None})
+    dfs_vertex(my_graph, source, search)
+    return search
+
+def dfs_vertex(my_graph, vertex, visited_map):
+    adj=adjacents(my_graph, vertex)
+    for i in adj:
+        if i in mp.key_set(visited_map["visited"]):
+            mp.put(visited_map['visited'], i, {'marked': True, 'edge_from': vertex})
+            visited_map=dfs_vertex(my_graph, i, visited_map)
+    return visited_map
+
+def dfo(my_graph):
+    aux_structure=dfo_s.new_dfo_structure(order(my_graph))
+    lst_vtcs=vertices(my_graph)
+    for i in range(ar.size(lst_vtcs)):
+        vertex = ar.get_element(lst_vtcs, i)
+        if mp.contains(aux_structure["marked"], vertex)==False:
+            queue.enqueue(aux_structure["pre"], vertex)
+            dfs_vertex(my_graph, vertex, aux_structure)
+            queue.enqueue(aux_structure["post"], vertex)
+            stack.push(aux_structure["reversepost"], vertex)
+    return aux_structure
+    
