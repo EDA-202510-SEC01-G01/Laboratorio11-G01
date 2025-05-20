@@ -107,17 +107,17 @@ def get_vertex(my_graph, key_u): #retorna el valor(value) de key_u
         raise Exception ('El vertice no existe')
 
 def dfs(my_graph, source):
-    search = {'source': source, 'visited': None}
-    search['visited'] = mp.new_map(order(my_graph), 0.5)
-    mp.put(search['visited'], source, {'marked': True, 'edge_from': None})
+    search = {'source': source, 'marked': None}
+    search['marked'] = mp.new_map(order(my_graph), 0.5)
+    mp.put(search['marked'], source, {'edge_from': None})
     dfs_vertex(my_graph, source, search)
     return search
 
 def dfs_vertex(my_graph, vertex, visited_map):
     adj=adjacents(my_graph, vertex)
     for i in adj:
-        if i in mp.key_set(visited_map["visited"]):
-            mp.put(visited_map['visited'], i, {'marked': True, 'edge_from': vertex})
+        if i in mp.key_set(visited_map["marked"]):
+            mp.put(visited_map['marked'], i, {'edge_from': vertex})
             visited_map=dfs_vertex(my_graph, i, visited_map)
     return visited_map
 
