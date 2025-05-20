@@ -6,6 +6,8 @@ from DataStructures.Graph import dfo_structure as dfo_s
 from DataStructures.List import array_list as ar
 from DataStructures.Queue import queue
 from DataStructures.Stack import stack
+from DataStructures.Graph import prim_structure as prim_s
+from DataStructures.Priority_queue import priority_queue as pq
 
 def new_graph(order): 
     rst={
@@ -133,3 +135,5 @@ def dfo(my_graph):
             stack.push(aux_structure["reversepost"], vertex)
     return aux_structure
     
+def prim_mst(my_graph, source):
+    pass
