@@ -166,7 +166,30 @@ def bfs_vertex(my_graph, source, visited_map):
     return visited_map
 
 def prim_mst(my_graph, source):
-    pass
+    search = prim_s.new_prim_structure(source, size(my_graph))
+    mp.put(search['marked'], source['key'], source)
+    search = prim_vertex(my_graph, source, search)
+    return search
+
+def prim_vertex(my_graph, source, visited_map):
+    pq.insert(visited_map['pq'], 0, source['key'])
+    mp.put(visited_map['edge_from'], source['key'], None)
+    mp.put(visited_map['dist_to'], source['key'], 0)
+    pred = None
+    while pq.is_empty(visited_map['pq']) != True:
+        primero = get_vertex_information(my_graph, pq.get_first_priority(visited_map['pq']))
+        adyacentes = adjacents(my_graph, primero)
+        pq.remove(visited_map['pq'])
+        pred = primero
+        for vertice in adyacentes:
+            edge = get_edge(my_graph, pred['key'], vertice)
+            dist = edge['weight']
+            if mp.get(visited_map['marked'], vertice) == None:
+                mp.put(visited_map['marked'], vertice, True)
+                mp.put(visited_map['edge_from'], vertice, pred)
+                mp.put(visited_map['dist'], vertice, dist)
+                pq.insert(visited_map['pq'], edge['peso'],vertice)
+    return visited_map
 
 def dijkstra(graph, source):
     dist_to = mp.new_map(order(graph), 0.5)
