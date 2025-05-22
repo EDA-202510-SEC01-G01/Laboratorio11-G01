@@ -135,6 +135,7 @@ def dfo(my_graph):
             stack.push(aux_structure["reversepost"], vertex)
     return aux_structure
 
+
 def bfs(my_graph, source):
     search = {'source': source, 'marked': None, 'post': ar.new_list()}
     search['marked'] = mp.new_map(order(my_graph), 0.5)
@@ -161,3 +162,50 @@ def bfs_vertex(my_graph, source, visited_map):
 def prim_mst(my_graph, source):
     pass
 
+def dijkstra(graph, source):
+    dist_to = mp.new_map(order(graph), 0.5)
+    edge_to = mp.new_map(order(graph), 0.5)
+    visited = mp.new_map(order(graph), 0.5)
+    pqu = pq.new_heap()  
+
+    
+    for v in vertices(graph):
+        mp.put(dist_to, v, float('inf'))
+    mp.put(dist_to, source, 0)
+
+    
+    pq.insert(pqu, (0, source))  
+
+    while True:
+        try:
+            distancia_actual, v = pq.remove(pqu)
+        except:
+            break 
+
+        
+        if mp.get(visited, v) is not None:
+            continue
+        mp.put(visited, v, True)
+
+        for w in adjacents(graph, v):
+            edge = get_edge(graph, v, w)
+            peso = edge['weight']
+            nueva_dist = distancia_actual + peso
+
+            if mp.get(dist_to, w)['value'] > nueva_dist:
+                mp.put(dist_to, w, nueva_dist)
+                mp.put(edge_to, w, v)
+                pq.insert(pqu, (nueva_dist, w))  
+
+    return dist_to, edge_to
+
+def reconstruir_camino(dest, edge_to):
+    camino = []
+    actual = dest
+    while True:
+        camino.insert(0, actual)
+        buscado = mp.get(edge_to, actual)
+        if buscado is None:
+            break
+        actual = buscado['value']
+    return camino

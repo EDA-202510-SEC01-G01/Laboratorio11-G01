@@ -30,13 +30,13 @@
 
 from DataStructures.List import single_linked_list as lt
 from DataStructures.Map import map_linear_probing as m
-from DataStructures.Graph import digraph as G
+from DataStructures.Graph import add_list_graph as G
 
 import csv
 import time
 import os
 
-data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/'
+data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/singapur_bus_routes/'
 
 
 """
@@ -81,7 +81,7 @@ def new_analyzer():
         analyzer['stops'] = m.new_map(
             num_elements=14000, load_factor=0.7, prime=109345121)
 
-        analyzer['connections'] = G.new_graph(size=14000)
+        analyzer['connections'] = G.new_graph(14000)
         return analyzer
     except Exception as exp:
         return exp
@@ -127,6 +127,7 @@ def set_station(analyzer, station):
         if vertex is not None:
             # TODO: Llame a la ejecucion de Dijkstra desde la estacion
             # base para calcular los caminos de costo minimo
+            caminos_costo_minimo = G.dijkstra(analyzer['connections'], station)
             return True
         else:
             return False

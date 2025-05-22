@@ -54,7 +54,14 @@ def print_menu():
     print("*******************************************")
     print("Bienvenido")
     print("1- Inicializar Analizador")
-    print("2- Cargar información de buses de singapur")
+    print("2- Cargar información de buses de singapur:")
+    print("3- Calcular componentes conectados:")
+    print("4- Establecer estacion base:")
+    print("5- Hay camino entre base y estacion:")
+    print("6- Ruta de costo minimo desde la estacion base y estacion:")
+    print("7- Estacion que sirve a más rutas:Estacion que sirve a más rutas:")
+    print("8- Existe un camino de bisqueda entre la estacion base y estacion destino:")
+    print("9- Ruta de busqueda entre la estacion base y la estacion destino")
     print("0- Salir")
     print("*******************************************")
 
@@ -69,6 +76,34 @@ def option_two(cont):
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
 
 
+"""Por falta de tiempo envia solo con la implementacion del grafo asegurando que la informacion carga correctamente dentro de la estructura"""
+    
+
+
+def option_three(cont):
+    print('Calculando componentes conectados') #Con DFO calcular componentes conectados
+    
+def option_four(cont, base):
+    print('Base instaurada correctamente')
+    puede = logic.set_station(cont, base)
+    if puede == True:
+        global base_g
+        base_g = base
+    else:
+        print('Pruebe nuevamente')
+def option_five(cont, base):
+    logic.camino_base_estacion() #Con dfs verificar si existe camino entre base y estacion 
+def option_six(cont, base):
+    logic.camino_costo_minimo() #Con dikjstra generar camino de costo minimo 
+
+def option_seven(cont):
+    logic.estacion_mas_rutas() #No sabemos bien como
+    
+def option_eight(cont):
+    logic.search_path() #con algun algoritmo de recorrido modificar el retorno
+
+def option_eight(cont):
+    logic.search_path() #con algun algoritmo de recorrido modificar el retorno
 """
 Menu principal
 """
@@ -84,9 +119,22 @@ def main():
             print("\nInicializando....")
             # cont es el controlador que se usará de acá en adelante
             cont = logic.init()
-
         elif int(inputs[0]) == 2:
             option_two(cont)
+        elif int(inputs[0]) == 3:
+            option_three(cont)
+        elif int(inputs[0]) == 4:
+            option_four(cont)
+        elif int(inputs[0]) == 5:
+            option_five(cont, base_g)
+        elif int(inputs[0]) == 6:
+            option_six(cont)
+        elif int(inputs[0]) == 7:
+            option_seven(cont)
+        elif int(inputs[0]) == 8:
+            option_eight(cont)
+        elif int(inputs[0]) == 9:
+            option_nine(cont)
         else:
             working = False
             print("Saliendo...")
