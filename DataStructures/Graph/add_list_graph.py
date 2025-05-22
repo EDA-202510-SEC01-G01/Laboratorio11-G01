@@ -8,6 +8,12 @@ from DataStructures.Queue import queue
 from DataStructures.Stack import stack
 from DataStructures.Graph import prim_structure as prim_s
 from DataStructures.Priority_queue import priority_queue as pq
+from DataStructures.Graph import dfo_structure as dfo_s
+from DataStructures.List import array_list as ar
+from DataStructures.Queue import queue
+from DataStructures.Stack import stack
+from DataStructures.Graph import prim_structure as prim_s
+from DataStructures.Priority_queue import priority_queue as pq
 
 def new_graph(order): 
     rst={
@@ -107,6 +113,108 @@ def get_vertex(my_graph, key_u): #retorna el valor(value) de key_u
         return v1['value']
     else:
         raise Exception ('El vertice no existe')
+
+def dfs(my_graph, source):
+    search = {'source': source, 'marked': None}
+    search['marked'] = mp.new_map(order(my_graph), 0.5)
+    mp.put(search['marked'], source, {'edge_from': None})
+    dfs_vertex(my_graph, source, search)
+    return search
+
+def dfs_vertex(my_graph, vertex, visited_map):
+    adj=adjacents(my_graph, vertex)
+    for i in adj:
+        if i in mp.key_set(visited_map["marked"]):
+            mp.put(visited_map['marked'], i, {'edge_from': vertex})
+            visited_map=dfs_vertex(my_graph, i, visited_map)
+    return visited_map
+
+def dfo(my_graph):
+    aux_structure=dfo_s.new_dfo_structure(order(my_graph))
+    lst_vtcs=vertices(my_graph)
+    for i in range(ar.size(lst_vtcs)):
+        vertex = ar.get_element(lst_vtcs, i)
+        if mp.contains(aux_structure["marked"], vertex)==False:
+            queue.enqueue(aux_structure["pre"], vertex)
+            dfs_vertex(my_graph, vertex, aux_structure)
+            queue.enqueue(aux_structure["post"], vertex)
+            stack.push(aux_structure["reversepost"], vertex)
+    return aux_structure
+
+
+def bfs(my_graph, source):
+    search = {'source': source, 'marked': None, 'post': ar.new_list()}
+    search['marked'] = mp.new_map(order(my_graph), 0.5)
+    mp.put(search['marked'], source, {'edge_from': None})
+    search = bfs_vertex(my_graph, source, search)
+    return search
+
+def bfs_vertex(my_graph, source, visited_map):
+    orden = queue.new_queue()
+    queue.enqueue(orden, source['key'])
+    pred = None
+    while queue.is_empty(orden) != True:
+        primero = get_vertex_information(my_graph, orden['first'])
+        adyacentes = adjacents(my_graph, primero)
+        queue.dequeue(orden)
+        ar.add_last(visited_map['post'], primero['key'])
+        pred = primero
+        for vertice in adyacentes:
+            if mp.get(visited_map['marked'], vertice) == None:
+                mp.put(visited_map['marked'], vertice, {'edge_from': pred})
+                queue.enqueue(orden, vertice)
+    return visited_map
+
+def prim_mst(my_graph, source):
+    pass
+
+def dijkstra(graph, source):
+    dist_to = mp.new_map(order(graph), 0.5)
+    edge_to = mp.new_map(order(graph), 0.5)
+    visited = mp.new_map(order(graph), 0.5)
+    pqu = pq.new_heap()  
+
+    
+    for v in vertices(graph):
+        mp.put(dist_to, v, float('inf'))
+    mp.put(dist_to, source, 0)
+
+    
+    pq.insert(pqu, (0, source))  
+
+    while True:
+        try:
+            distancia_actual, v = pq.remove(pqu)
+        except:
+            break 
+
+        
+        if mp.get(visited, v) is not None:
+            continue
+        mp.put(visited, v, True)
+
+        for w in adjacents(graph, v):
+            edge = get_edge(graph, v, w)
+            peso = edge['weight']
+            nueva_dist = distancia_actual + peso
+
+            if mp.get(dist_to, w)['value'] > nueva_dist:
+                mp.put(dist_to, w, nueva_dist)
+                mp.put(edge_to, w, v)
+                pq.insert(pqu, (nueva_dist, w))  
+
+    return dist_to, edge_to
+
+def reconstruir_camino(dest, edge_to):
+    camino = []
+    actual = dest
+    while True:
+        camino.insert(0, actual)
+        buscado = mp.get(edge_to, actual)
+        if buscado is None:
+            break
+        actual = buscado['value']
+    return camino
 
 def dfs(my_graph, source):
     search = {'source': source, 'marked': None}
